@@ -92,7 +92,7 @@ function buildOptions(correctText, distractors) {
     pad++;
     if (!seen.has(filler)) { seen.add(filler); cleaned.push(filler); }
   }
-  const all = deBiasShuffle([{ text: String(correctText), correct: true }, ...cleaned.slice(0, 3).map(t => ({ text: t, correct: false }))], 0);
+  const all = shuffleArray([{ text: String(correctText), correct: true }, ...cleaned.slice(0, 3).map(t => ({ text: t, correct: false }))]);
   const labels = ['A', 'B', 'C', 'D'];
   const options = all.map((o, i) => ({ option: labels[i], text: o.text }));
   const correctOption = labels[all.findIndex(o => o.correct)];
@@ -1339,7 +1339,8 @@ const generators = {
           answer = gcd(a - r, b - r); display = String(answer);
           prompt = `Find the largest number that divides ${a} and ${b} leaving a remainder of ${r} in each case.`;
         } else if (type === 2) {
-          const r = randInt(2, 5); const a = randInt(5, 10); const b = randInt(5, 10);
+          const r = randInt(2, 5); const a = randInt(5, 10); let b = randInt(5, 10);
+          while (b === a) { b = randInt(5, 10); }
           answer = lcm(a, b) + r; display = String(answer);
           prompt = `What is the smallest positive integer which when divided by ${a} and ${b} leaves a remainder of ${r} in each case?`;
         } else if (type === 3) {
@@ -1350,7 +1351,8 @@ const generators = {
           answer = lengths.g; display = String(answer);
           prompt = `A merchant has three pieces of ribbon of lengths ${lengths.a} cm, ${lengths.b} cm, and ${lengths.c} cm. He wants to cut them into equal pieces of the maximum possible length. What should be the length of each piece (in cm)?`;
         } else {
-          const a = randInt(6, 12); const b = randInt(8, 15);
+          const a = randInt(6, 12); let b = randInt(8, 15);
+          while (b === a) { b = randInt(8, 15); }
           answer = lcm(a, b); display = String(answer);
           prompt = `Two neon signs blink at different rates. Sign A blinks every ${a} seconds, and Sign B blinks every ${b} seconds. If they both blink together now, after how many seconds will they next blink together?`;
         }
